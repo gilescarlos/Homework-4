@@ -1,75 +1,45 @@
-// MAIN.cpp
-
-#include<iostream>
-#include<stdio.h>
+#include <iostream>
+#include "Dice.h"
 
 using namespace std;
 
-#include"ParkedCar.h"
-#include"ParkingMeter.h"
-#include"ParkingTicket.h"
-#include"PoliceOfficer.h"
-
 int main() {
-    bool status;
+    Dice dice1, dice2;
+    int playerTotal = 0;
+    int computerTotal = 0;
 
-    ParkingMeter meter;
-    ParkedCar car;
-    PoliceOfficer officer;
-    string col;
-    string mk;
-    string mod;
-    string lic;
-    string name;
-    int badge;
-    int minutesParked;
-    int purchasedMin;
+    while(true){
+        int answer;
+        cout << "Do you want to roll dice and accumulate points? (1 - yes; 2 - no): ";
+        cin >> answer;
 
+        if (answer != 1)
+            break;
 
-    cout << "OFFICER INFORMATION:" << endl;
-    cout << "Name of Officer: ";
-    getline(cin, name);
-    officer.setOfficerName(name);
+        dice1.roll();
+        dice2.roll();
+        computerTotal += dice1.getValue() + dice2.getValue();
 
-    cout << "Badge Number: ";
-    cin >> badge;
-    officer.setBadgeNumber(badge);
+        dice1.roll();
+        dice2.roll();
+        playerTotal += dice1.getValue() + dice2.getValue();
 
-    cout << "\nCAR INFORMATION:" << endl;
-    cout << "Car's Make: ";
-    cin >> mk;
-    car.setMake(mk);
+        cout << "Your current total is " << playerTotal << "\n\n";
 
-    cout << "Car's Model: ";
-    cin >> mod;
-    getline(cin, mod);
-    car.setModel(mod);
+        if (playerTotal > 21 || computerTotal > 21)
+            break;
+    }
 
-    cout << "Car's Color: ";
-    cin >> col;
-    car.setColor(col);
+    cout << "Your total: " << playerTotal << "\n";
+    cout << "Computer total: " << computerTotal << "\n\n";
 
-    cout << "Car's License Number: ";
-    cin >> lic;
-    car.setLicenseNumber(lic);
-
-    cout << "\nNumber of minutes the car is parked: ";
-    cin >> minutesParked;
-    car.setMinutesParked(minutesParked);
-
-    cout << "Number of minutes purchased for parking: ";
-    cin >> purchasedMin;
-    meter.setMinutesPurchased(purchasedMin);
-
-    status = officer.patrol(car.getMinutesParked(), meter.getMinutesPurchased());
-
-    if (status == false) {
-        ParkingTicket *pt = new ParkingTicket();
-        pt->print(car, meter, officer);
+    if ((playerTotal <= 21 && playerTotal == computerTotal) || (playerTotal > 21 && computerTotal > 21)){
+        cout << "Match tie.\n";
+    } else if (playerTotal <= 21 && playerTotal > computerTotal){
+        cout << "You win!\n";
     } else {
-        cout << "Car is Legally Parked.";
+        cout << "You lose.\n";
     }
 
     return 0;
-
 }
